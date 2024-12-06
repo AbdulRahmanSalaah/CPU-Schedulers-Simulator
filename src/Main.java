@@ -80,6 +80,7 @@ public class Main {
                 // Option 1: Run Non-preemptive Priority Scheduling
                 // priorityScheduling.setProcesses(processes);
                 // priorityScheduling.run(contextSwitching);
+                priorityScheduling.run(priorityprocesses, contextSwitching);
 
             } else if (opt == 2) {
                 // Option 2: Run Non-preemptive Shortest Job First (SJF)
