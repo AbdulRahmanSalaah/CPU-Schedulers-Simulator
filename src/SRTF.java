@@ -5,6 +5,8 @@ public class SRTF {
         int currentTime = 0;
         int processCounter = 0;
         int threshold = 20;
+        int sumWaitingTime = 0;
+        int sumTurnaroundTime = 0;
         ArrayList<Process>readyQueue = new ArrayList<>();
         ArrayList<Process>completedProcesses = new ArrayList<>();
         Process lastProcess = null;  // to track the last process
@@ -57,9 +59,11 @@ public class SRTF {
                     //waiting time
                     int waitTime = minTimeProcess.compeletion - minTimeProcess.getBurstTime() - minTimeProcess.getArrivalTime();
                     minTimeProcess.setWaitingTime(waitTime);
+                    sumWaitingTime += waitTime;
                     //turnaround time
                     int turnaroundTime = minTimeProcess.compeletion - minTimeProcess.getArrivalTime();
                     minTimeProcess.setTurnaroundTime(turnaroundTime);
+                    sumTurnaroundTime += turnaroundTime;
                     //adds the process to the completed list of processes
                     completedProcesses.add(minTimeProcess);
                     //remove it from the ready queue
@@ -75,5 +79,7 @@ public class SRTF {
         for (Process process : completedProcesses) {
             System.out.println(process.process_name+"          |     " + process.getWaitingTime()+"          |           "+process.getTurnaroundTime()+"\n");
         }
+        System.out.println("Average Waiting Time: " + sumWaitingTime / processes.size());
+        System.out.println("Average Turnaround Time: " + sumTurnaroundTime / processes.size());
     }
 }
