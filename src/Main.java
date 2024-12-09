@@ -47,8 +47,7 @@ public class Main {
             System.out.print("Priority Number: ");
             int priority = input.nextInt();
             System.out.print("Initial Quantum: ");
-            double quantum = input.nextDouble();
-
+            int quantum = input.nextInt();
             // Create and add process to the list
 
 
@@ -80,6 +79,7 @@ public class Main {
                 // Option 1: Run Non-preemptive Priority Scheduling
                 // priorityScheduling.setProcesses(processes);
                 // priorityScheduling.run(contextSwitching);
+                priorityScheduling.run(priorityprocesses, contextSwitching);
 
             } else if (opt == 2) {
                 // Option 2: Run Non-preemptive Shortest Job First (SJF)
@@ -91,7 +91,7 @@ public class Main {
 
             } else if (opt == 4) {
                 // Option 5: Run FCAI Scheduling
-                fcai.execute(fcaiprocesses);
+                fcai.execute(fcaiprocesses, contextSwitching);
 
             } else if (opt == 5) {
                 // Exit the program

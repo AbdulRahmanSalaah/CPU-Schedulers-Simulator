@@ -1,11 +1,15 @@
+
+import java.util.List;
+
 public class Process {
+
     int process_num; // Process number
     String process_name; // Process name
     int burstTime; // Original burst time
     int burstTimecalc; // Unused, but kept as per original class
     int arrivalTime; // Arrival time of the process
     int priority; // Priority of the process
-    double quantum; // Quantum for Round Robin or FCAI
+    int quantum =0; // Quantum for Round Robin or FCAI
     int ExitTime; // Completion or exit time
     public int wait; // Waiting time of the process
     public int turn; // Turnaround time of the process
@@ -17,19 +21,22 @@ public class Process {
     public int updateATime; // Updated arrival time (unused, but kept for your compatibility)
 
     // Added fields for FCAI Scheduling
-    private double fcaiFactor; // FCAI Factor for scheduling
-    private int waitingTime; // Dynamic waiting time for the process
-    private int turnaroundTime; // Dynamic turnaround time for the process
+    public int fcaiFactor; // FCAI Factor for scheduling
+    public int waitingTime; // Dynamic waiting time for the process
+    public int turnaroundTime; // Dynamic turnaround time for the process
+    private List<int[]> executionLog; // Holds start and end times for each execution
 
     // Constructor for FCAI Scheduling
-    public Process(String process_name, int arrivalTime, int burstTime, int priority, double quantum) {
+    public Process(String process_name, int arrivalTime, int burstTime, int priority, int quantum) {
         this.process_name = process_name;
         this.arrivalTime = arrivalTime;
         this.burstTime = burstTime;
-        this.burstTimecalc = burstTime; // To preserve original burst time
+        // this.burstTimecalc = burstTime; // To preserve original burst time
         this.remaining = burstTime; // Initialize remaining burst time
         this.priority = priority;
         this.quantum = quantum;
+        // this.executionLog = new ArrayList<>(); // Initialize the execution log
+
     }
 
     // Constructor for processes with burst time and arrival time only
@@ -104,11 +111,11 @@ public class Process {
     }
 
     // Getter and Setter for Quantum
-    public void setQuantum(double quantum) {
+    public void setQuantum(int quantum) {
         this.quantum = quantum;
     }
 
-    public double getQuantum() {
+    public int getQuantum() {
         return quantum;
     }
 
@@ -144,7 +151,7 @@ public class Process {
         return fcaiFactor;
     }
 
-    public void setFcaiFactor(double fcaiFactor) {
+    public void setFcaiFactor(int fcaiFactor) {
         this.fcaiFactor = fcaiFactor;
     }
 
@@ -168,7 +175,7 @@ public class Process {
 
     // Calculate FCAI Factor
     public void calculateFcaiFactor(double V1, double V2) {
-        this.fcaiFactor = (10 - this.priority) + (this.arrivalTime / V1) + (this.remaining / V2);
+        this.fcaiFactor = (10 - priority) + (int)Math.ceil(arrivalTime / V1) + (int)Math.ceil(remaining / V2);
     }
 
     // Increment Quantum Dynamically
@@ -179,6 +186,16 @@ public class Process {
     // Adjust Quantum for Preemption
     public void adjustQuantum(double unusedQuantum) {
         this.quantum += unusedQuantum;
+    }
+        // Quantum Update
+    public void updateQuantum(int unusedQuantum) {
+        if (unusedQuantum > 0) {
+            // If some quantum was unused, increase dynamically
+            quantum += unusedQuantum ; 
+        } else {
+            // Fixed increment if the quantum is completely consumed
+            quantum += 2; // Increment quantum by 2 units
+        }
     }
 
     // Update Waiting Time Dynamically
@@ -198,5 +215,25 @@ public class Process {
 
     public void setRemainingBurstTime(int remainingBurstTime) {
         this.remaining = remainingBurstTime;
+    }
+
+    public void executeForOneSecond() {
+        if (remaining > 0) {
+            remaining--;
+        }
+    }
+
+    // Add an execution interval to the log
+    public void addExecution(int start, int end) {
+        executionLog.add(new int[]{start, end});
+    }
+
+    // Get the execution log as a formatted string
+    public String getExecutionLog() {
+        StringBuilder log = new StringBuilder();
+        for (int[] interval : executionLog) {
+            log.append("{start=").append(interval[0]).append(", end=").append(interval[1]).append("} ");
+        }
+        return log.toString().trim();
     }
 }
