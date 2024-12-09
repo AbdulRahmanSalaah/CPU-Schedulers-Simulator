@@ -1,15 +1,17 @@
-
+package scheduler;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Process {
 
+    // Existing attributes
     int process_num; // Process number
     String process_name; // Process name
     int burstTime; // Original burst time
     int burstTimecalc; // Unused, but kept as per original class
     int arrivalTime; // Arrival time of the process
     int priority; // Priority of the process
-    int quantum =0; // Quantum for Round Robin or FCAI
+    int quantum = 0; // Quantum for Round Robin or FCAI
     int ExitTime; // Completion or exit time
     public int wait; // Waiting time of the process
     public int turn; // Turnaround time of the process
@@ -26,17 +28,42 @@ public class Process {
     public int turnaroundTime; // Dynamic turnaround time for the process
     private List<int[]> executionLog; // Holds start and end times for each execution
 
+    private int startTime = -1; // First start time
+    private int endTime = -1;   // Last end time (updated dynamically)
+
+
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
+    }
+
+
+    public int getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(int endTime) {
+        this.endTime = endTime;
+    }
+
+    // Added color field for GUI visualization
+    public String color;
+
+
+    // Constructors
     // Constructor for FCAI Scheduling
     public Process(String process_name, int arrivalTime, int burstTime, int priority, int quantum) {
         this.process_name = process_name;
         this.arrivalTime = arrivalTime;
         this.burstTime = burstTime;
-        // this.burstTimecalc = burstTime; // To preserve original burst time
         this.remaining = burstTime; // Initialize remaining burst time
         this.priority = priority;
         this.quantum = quantum;
-        // this.executionLog = new ArrayList<>(); // Initialize the execution log
-
+        this.executionLog = new ArrayList<>(); // Initialize the execution log
+        this.color = ColorUtils.getRandomColor(); // Assign a random color
     }
 
     // Constructor for processes with burst time and arrival time only
@@ -46,15 +73,19 @@ public class Process {
         this.arrivalTime = arrivalTime;
         this.updateATime = arrivalTime;
         this.remaining = burstTime;
+        this.executionLog = new ArrayList<>();
+        this.color = ColorUtils.getRandomColor();
     }
 
     // Constructor for processes with arrival time, burst time, and priority
-    public Process(String process_name, int arrivalTime, int burstTime, int priority) {
+    public Process(String process_name, int burstTime,int arrivalTime,  int priority) {
         this.process_name = process_name;
         this.burstTime = burstTime;
         this.burstTimecalc = burstTime;
         this.arrivalTime = arrivalTime;
         this.priority = priority;
+        this.executionLog = new ArrayList<>();
+        this.color = ColorUtils.getRandomColor();
     }
 
     // Constructor with process number
@@ -63,6 +94,8 @@ public class Process {
         this.process_name = process_name;
         this.burstTime = burstTime;
         this.arrivalTime = arrivalTime;
+        this.executionLog = new ArrayList<>();
+        this.color = ColorUtils.getRandomColor();
     }
 
     // Getter and Setter for Process Number
@@ -187,11 +220,12 @@ public class Process {
     public void adjustQuantum(double unusedQuantum) {
         this.quantum += unusedQuantum;
     }
-        // Quantum Update
+
+    // Quantum Update
     public void updateQuantum(int unusedQuantum) {
         if (unusedQuantum > 0) {
             // If some quantum was unused, increase dynamically
-            quantum += unusedQuantum ; 
+            quantum += unusedQuantum; 
         } else {
             // Fixed increment if the quantum is completely consumed
             quantum += 2; // Increment quantum by 2 units
@@ -225,15 +259,35 @@ public class Process {
 
     // Add an execution interval to the log
     public void addExecution(int start, int end) {
-        executionLog.add(new int[]{start, end});
+//        System.out.println("Adding execution: Start = " + start + ", End = " + end);
+        if (executionLog == null) {
+            executionLog = new ArrayList<>();
+        }
+            executionLog.add(new int[]{start, end});
+
+
     }
 
-    // Get the execution log as a formatted string
-    public String getExecutionLog() {
+    // Get the execution log
+    public List<int[]> getExecutionLog() {
+        return executionLog;
+    }
+
+    // Get the execution log as a formatted string (optional)
+    public String getExecutionLogString() {
         StringBuilder log = new StringBuilder();
         for (int[] interval : executionLog) {
             log.append("{start=").append(interval[0]).append(", end=").append(interval[1]).append("} ");
         }
         return log.toString().trim();
+    }
+
+    // Getter and Setter for Color
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

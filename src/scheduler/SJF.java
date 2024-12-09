@@ -1,6 +1,5 @@
+package scheduler;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 
 public class SJF {
@@ -48,11 +47,14 @@ public class SJF {
 
                 selectedProcess = availableProcesses.get(0);
             }
+            int startTime = time;
 
             // Execute the selected process
             time += selectedProcess.getBurstTime();
             selectedProcess.setRemainingBurstTime(0); // Mark process as completed
             selectedProcess.setExitTime(time);
+
+            selectedProcess.addExecution(startTime, time);
 
             int turnaroundTime = time - selectedProcess.getArrivalTime();
             int waitingTime = turnaroundTime - selectedProcess.getBurstTime();
