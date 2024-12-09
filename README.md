@@ -62,5 +62,11 @@ Where:
 
 ---
 
+## Example GUI
+
+This is an example of the GUI for the process timeline chart:
+
+![Screenshot 2024-12-09 223028](https://github.com/user-attachments/assets/0e16b867-32a8-4ac9-8850-d9a26658524d)
+
 © 2024 Cairo University, Faculty of Computers & Artificial Intelligence
 
