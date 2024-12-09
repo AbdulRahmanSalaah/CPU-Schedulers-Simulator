@@ -50,4 +50,8 @@ public class PriorityScheduling {
             System.out.println("No processes to schedule.");
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 7c8a81c4be038d31951ecb2d531fe24a72ee8eb5
